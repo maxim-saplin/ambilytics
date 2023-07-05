@@ -8,7 +8,13 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
-  # path: ^1.8.0
+  http: 
+  firebase_analytics:
+  firebase_core:
+  flutter:
+    sdk: flutter
+  shared_preferences: 
+  uuid: 
 
 dev_dependencies:
   lints: ^2.0.0
