@@ -114,6 +114,9 @@ void _sendAppLaunchEvent() {
   sendEvent(PredefinedEvents.appLaunch, params);
 }
 
+/// Sends a given [eventName] with given [params] using either [firebaseAnalitics]
+/// or Measurement Protocol [ambilytics]. It tries Firbase Analytics first (if it is initilized)
+/// then it goes to MP. It doesn't send events with both protocols, just one
 void sendEvent(String eventName, [Map<String, Object?>? params]) {
   assert(!reservedGa4Events.contains(eventName));
   assert(eventName.isNotEmpty && eventName.length <= 40,

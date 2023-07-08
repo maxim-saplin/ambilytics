@@ -55,6 +55,27 @@ void main() {
     expect((captured[1] as Map)['platform'], 'linux');
     debugDefaultTargetPlatformOverride = null;
   });
+
+  test('Firebase analytics sends app_launch event with correct platfrom',
+      () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+    var mock = MockFirebaseAnalytics();
+    when(() => mock.logEvent(
+        name: any(named: 'name'),
+        parameters: any(named: 'parameters'),
+        callOptions: any(named: 'callOptions'))).thenAnswer((_) async {});
+    setMockFirebase(mock);
+    // Hiding MP paramas to use mocked instance instead
+    await initAnalytics(fallbackToMP: true);
+    expect(isAmbyliticsInitialized, true);
+    final captured = verify(() => mock.logEvent(
+        name: captureAny(named: 'name'),
+        parameters: captureAny(named: 'parameters'),
+        callOptions: captureAny(named: 'callOptions'))).captured;
+    expect(captured[0], 'app_launch');
+    expect((captured[1] as Map)['platform'], 'iOS');
+    debugDefaultTargetPlatformOverride = null;
+  });
 }
 
 class MockAmbyliticsObserver extends Mock implements AmbyliticsObserver {}
