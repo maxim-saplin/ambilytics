@@ -19,18 +19,20 @@ bool _initialized = false;
 
 bool isInitialized() => _initialized;
 
-/// Prepares analytics for usage.
+/// Prepares analytics for usage. Doesn't throw error in relase config, throws assertions in debug mode. If Ambylitucs fails to initialize [isInitialized] returns false.
 /// If the platform is Android, iOS, macOS, or Web, Firebase Analytics will be used ([firebaseAnalytics] instance will be initialized).
 /// Otherwise, GA4 Measurement protocol and custom events will be used ([ambilytics] instance will be initialized).
-/// If [sendAppLaunch] is true, "app_launch" will be ent with "platfrom" param value corresponding runtime platform (i.e. Windows)
+/// If [fallbackToMP] is true, than Measurement Protocol will be used if Firebase analytics fails to initialize. E.g. you can skip configuring Firebase Analytics in native projects and use MP for all platforms.
 /// If [dontInintilize] is `true`, analytics will not be initialized, any analytics calls will be ingonred,
 /// [firebaseAnalytics] and [ambilytics] instances will be null. Usefull for the scanarious when toy wish to disable analytics.
+/// If [sendAppLaunch] is true, "app_launch" will be ent with "platfrom" param value corresponding runtime platform (i.e. Windows)
 /// [apiSecret] and [measurementId] must be set in order to enable GA4 Measurement protocol and have [ambilytics] initialized.
 /// [userId] allows overriding user identifier. If not provided, default user ID will be used by Firebase Analytics OR
 /// or a GUID will be created and put to shared_preferences storage (for Windows and Linux).
 Future<void> initAnalytics(
-    {bool sendAppLaunch = true,
-    bool dontInintilize = false,
+    {bool dontInintilize = false,
+    bool fallbackToMP = false,
+    bool sendAppLaunch = true,
     String? measurementId,
     String? apiSecret,
     String? userId}) async {
