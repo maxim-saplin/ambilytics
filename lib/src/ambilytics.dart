@@ -15,26 +15,25 @@ abstract class Events {
 AmbilyticsSession? ambilytics;
 FirebaseAnalytics? firebaseAnalytics;
 
-// TODO, find a better way to manage params and keep secrets outside of public repo
-// Measurement ID and API secret are taken from a Web stram created under GA4 property
-const measurementId = 'G-7FLXWTPJRY';
-const apiSecret = 'TsYPSiPVS12awPhZ_HD41Q';
-bool initialized = false;
+bool _initialized = false;
+
+bool isInitialized() => _initialized;
 
 /// Prepares analytics for usage.
-/// If the platform is Android, iOS, macOS, or Web, Firebase Analytics will be used.
-/// Otherwise, GA4 Measurement protocol and custom events will be used.
+/// If the platform is Android, iOS, macOS, or Web, Firebase Analytics will be used ([firebaseAnalytics] instance will be initialized).
+/// Otherwise, GA4 Measurement protocol and custom events will be used ([ambilytics] instance will be initialized).
 /// If [sendAppLaunch] is true, "app_launch" will be ent with "platfrom" param value corresponding runtime platform (i.e. Windows)
 /// If [dontInintilize] is `true`, analytics will not be initialized, any analytics calls will be ingonred,
-/// firebaseAnalytics will be null. Usefull for the scabarious when toy wish to disable analytics.
+/// [firebaseAnalytics] and [ambilytics] instances will be null. Usefull for the scanarious when toy wish to disable analytics.
+/// [apiSecret] and [measurementId] must be set in order to enable GA4 Measurement protocol and have [ambilytics] initialized.
 /// [userId] allows overriding user identifier. If not provided, default user ID will be used by Firebase Analytics OR
 /// or a GUID will be created and put to shared_preferences storage (for Windows and Linux).
-/// [fallbackToMP] Throws an error if initialization fails.
 Future<void> initAnalytics(
     {bool sendAppLaunch = true,
     bool dontInintilize = false,
-    String? userId,
-    fallbackToMP = false}) async {
+    String? measurementId,
+    String? apiSecret,
+    String? userId}) async {
   if (dontInintilize) return;
   try {
     WidgetsFlutterBinding.ensureInitialized();
@@ -47,9 +46,9 @@ Future<void> initAnalytics(
       if (userId != null) {
         await firebaseAnalytics!.setUserId(id: userId);
       }
-      initialized = true;
+      _initialized = true;
       if (sendAppLaunch) {
-        sendAppLaunchEvent();
+        _sendAppLaunchEvent();
       }
       return;
     }
@@ -66,25 +65,31 @@ Future<void> initAnalytics(
         await prefs.setString('userId', ambiUserId);
       }
     }
-    ambilytics = AmbilyticsSession(measurementId, apiSecret,
-        'test_user_${defaultTargetPlatform.name}', false);
-    initialized = true;
-    if (sendAppLaunch) {
-      sendAppLaunchEvent();
+    if (measurementId != null && apiSecret != null) {
+      ambilytics = AmbilyticsSession(measurementId, apiSecret,
+          'test_user_${defaultTargetPlatform.name}', false);
+    }
+    if (ambilytics != null || firebaseAnalytics != null) {
+      _initialized = true;
+      if (sendAppLaunch) {
+        _sendAppLaunchEvent();
+      }
+    } else {
+      assert(true,
+          'Neither Firebase Analytics nor Measurement Protocol have been initialized');
     }
   } catch (e) {
     assert(false, 'Can\'t init anaytics due to error.\n\n$e');
-    initialized = false;
+    _initialized = false;
   }
 }
 
-void sendAppLaunchEvent() {
+void _sendAppLaunchEvent() {
   final params = {'platform': defaultTargetPlatform.name};
   sendEvent(PredefinedEvents.appLaunch, params);
 }
 
-// TODO, check how custom events are registered when using GA4 and FB
-void sendEvent(String eventName, Map<String, Object?>? params) {
+void sendEvent(String eventName, [Map<String, Object?>? params]) {
   assert(!reservedGa4Events.contains(eventName));
   assert(eventName.isNotEmpty && eventName.length <= 40,
       'Event name should be between 1 and 40 characters long');
@@ -123,7 +128,7 @@ class AmbyliticsObserver extends RouteObserver<ModalRoute<dynamic>> {
       this.routeFilter = defaultRouteFilter,
       this.alwaySendScreenViewCust = false,
       Function(PlatformException error)? onError})
-      : assert(initialized, 'Ambilytics must be initialized first') {
+      : assert(_initialized, 'Ambilytics must be initialized first') {
     if (firebaseAnalytics != null) {
       faObserver = FirebaseAnalyticsObserver(
           analytics: firebaseAnalytics!,
