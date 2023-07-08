@@ -8,25 +8,37 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
-abstract class Events {
-  static const counterClicked = "counter_clicked";
-}
+// abstract class Events {
+//   static const counterClicked = "counter_clicked";
+// }
 
-AmbilyticsSession? ambilytics;
-FirebaseAnalytics? firebaseAnalytics;
+AmbilyticsSession? _ambilytics;
+FirebaseAnalytics? _firebaseAnalytics;
 
 bool _initialized = false;
 
-bool isInitialized() => _initialized;
+AmbilyticsSession? get ambilytics => _ambilytics;
+FirebaseAnalytics? get firebaseAnalytics => _firebaseAnalytics;
+bool get isAmbyliticsInitialized => _initialized;
 
-/// Prepares analytics for usage. Doesn't throw error in relase config, throws assertions in debug mode. If Ambylitucs fails to initialize [isInitialized] returns false.
-/// If the platform is Android, iOS, macOS, or Web, Firebase Analytics will be used ([firebaseAnalytics] instance will be initialized).
-/// Otherwise, GA4 Measurement protocol and custom events will be used ([ambilytics] instance will be initialized).
+@visibleForTesting
+void setMockAmbilytics(AmbilyticsSession ambilyticsSession) {
+  _ambilytics = ambilyticsSession;
+}
+
+@visibleForTesting
+void setMockFirebase(FirebaseAnalytics fa) {
+  _firebaseAnalytics = fa;
+}
+
+/// Prepares analytics for usage. Doesn't throw error in relase config, throws assertions in debug mode. If Ambylitucs fails to initialize [isAmbyliticsInitialized] returns false.
+/// If the platform is Android, iOS, macOS, or Web, Firebase Analytics will be used ([_firebaseAnalytics] instance will be initialized).
+/// Otherwise, GA4 Measurement protocol and custom events will be used ([_ambilytics] instance will be initialized).
 /// If [fallbackToMP] is true, than Measurement Protocol will be used if Firebase analytics fails to initialize. E.g. you can skip configuring Firebase Analytics in native projects and use MP for all platforms.
 /// If [dontInintilize] is `true`, analytics will not be initialized, any analytics calls will be ingonred,
-/// [firebaseAnalytics] and [ambilytics] instances will be null. Usefull for the scanarious when toy wish to disable analytics.
+/// [_firebaseAnalytics] and [_ambilytics] instances will be null. Usefull for the scanarious when toy wish to disable analytics.
 /// If [sendAppLaunch] is true, "app_launch" will be ent with "platfrom" param value corresponding runtime platform (i.e. Windows)
-/// [apiSecret] and [measurementId] must be set in order to enable GA4 Measurement protocol and have [ambilytics] initialized.
+/// [apiSecret] and [measurementId] must be set in order to enable GA4 Measurement protocol and have [_ambilytics] initialized.
 /// [userId] allows overriding user identifier. If not provided, default user ID will be used by Firebase Analytics OR
 /// or a GUID will be created and put to shared_preferences storage (for Windows and Linux).
 Future<void> initAnalytics(
@@ -45,9 +57,9 @@ Future<void> initAnalytics(
         kIsWeb) {
       try {
         await Firebase.initializeApp();
-        firebaseAnalytics = FirebaseAnalytics.instance;
+        _firebaseAnalytics = FirebaseAnalytics.instance;
         if (userId != null) {
-          await firebaseAnalytics!.setUserId(id: userId);
+          await _firebaseAnalytics!.setUserId(id: userId);
         }
         _initialized = true;
         if (sendAppLaunch) {
@@ -68,20 +80,21 @@ Future<void> initAnalytics(
     // Use measurement protocol
 
     var ambiUserId = userId;
+    const userIdField = 'userId';
 
     if (ambiUserId == null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      ambiUserId = prefs.getString('userId');
+      ambiUserId = prefs.getString(userIdField);
       if (ambiUserId == null) {
         ambiUserId = const Uuid().v4();
-        await prefs.setString('userId', ambiUserId);
+        await prefs.setString(userIdField, ambiUserId);
       }
     }
     if (measurementId != null && apiSecret != null) {
-      ambilytics = AmbilyticsSession(measurementId, apiSecret,
+      _ambilytics = AmbilyticsSession(measurementId, apiSecret,
           'test_user_${defaultTargetPlatform.name}', false);
     }
-    if (ambilytics != null || firebaseAnalytics != null) {
+    if (_ambilytics != null || _firebaseAnalytics != null) {
       _initialized = true;
       if (sendAppLaunch) {
         _sendAppLaunchEvent();
@@ -105,10 +118,10 @@ void sendEvent(String eventName, [Map<String, Object?>? params]) {
   assert(!reservedGa4Events.contains(eventName));
   assert(eventName.isNotEmpty && eventName.length <= 40,
       'Event name should be between 1 and 40 characters long');
-  if (firebaseAnalytics != null) {
-    firebaseAnalytics!.logEvent(name: eventName, parameters: params);
-  } else if (ambilytics != null) {
-    ambilytics!.sendEvent(eventName, params);
+  if (_firebaseAnalytics != null) {
+    _firebaseAnalytics!.logEvent(name: eventName, parameters: params);
+  } else if (_ambilytics != null) {
+    _ambilytics!.sendEvent(eventName, params);
   }
 }
 
@@ -141,9 +154,9 @@ class AmbyliticsObserver extends RouteObserver<ModalRoute<dynamic>> {
       this.alwaySendScreenViewCust = false,
       Function(PlatformException error)? onError})
       : assert(_initialized, 'Ambilytics must be initialized first') {
-    if (firebaseAnalytics != null) {
+    if (_firebaseAnalytics != null) {
       faObserver = FirebaseAnalyticsObserver(
-          analytics: firebaseAnalytics!,
+          analytics: _firebaseAnalytics!,
           nameExtractor: nameExtractor,
           routeFilter: routeFilter,
           onError: onError);
@@ -158,12 +171,14 @@ class AmbyliticsObserver extends RouteObserver<ModalRoute<dynamic>> {
 
   void _sendScreenView(Route<dynamic> route) {
     assert(route.settings.name != null, 'Route name cannot be null');
+    if (route.settings.name == null) return;
+
     final name = route.settings.name!;
-    if (ambilytics != null) {
-      ambilytics!
+    if (_ambilytics != null) {
+      _ambilytics!
           .sendEvent(PredefinedEvents.screenViewCust, {'screen_name': name});
     } else {
-      firebaseAnalytics!.logEvent(
+      _firebaseAnalytics!.logEvent(
           name: PredefinedEvents.screenViewCust,
           parameters: {'screen_name': name});
     }
