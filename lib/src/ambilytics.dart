@@ -43,16 +43,26 @@ Future<void> initAnalytics(
         defaultTargetPlatform == TargetPlatform.iOS ||
         defaultTargetPlatform == TargetPlatform.macOS ||
         kIsWeb) {
-      await Firebase.initializeApp();
-      firebaseAnalytics = FirebaseAnalytics.instance;
-      if (userId != null) {
-        await firebaseAnalytics!.setUserId(id: userId);
+      try {
+        await Firebase.initializeApp();
+        firebaseAnalytics = FirebaseAnalytics.instance;
+        if (userId != null) {
+          await firebaseAnalytics!.setUserId(id: userId);
+        }
+        _initialized = true;
+        if (sendAppLaunch) {
+          _sendAppLaunchEvent();
+        }
+
+        return;
+      } catch (e) {
+        if (fallbackToMP) {
+          print(
+              'Error initializing Firebase Analytics, falling back to Measurement Protocol. \n$e');
+        } else {
+          rethrow;
+        }
       }
-      _initialized = true;
-      if (sendAppLaunch) {
-        _sendAppLaunchEvent();
-      }
-      return;
     }
 
     // Use measurement protocol

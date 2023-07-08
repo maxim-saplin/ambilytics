@@ -26,6 +26,15 @@ void main() {
     expect(isInitialized(), true);
     debugDefaultTargetPlatformOverride = null;
   });
+
+  test('Ambylitics falls back to GA4 MP params when initilized', () async {
+    // Seems like Flutter test SDK slways sets platform to Android
+    await initAnalytics(
+        measurementId: 'someId', apiSecret: 'someSecret', fallbackToMP: true);
+    expect(ambilytics, isNotNull);
+    expect(firebaseAnalytics, null);
+    expect(isInitialized(), true);
+  });
 }
 
 class MockAmbyliticsObserver extends Mock implements AmbyliticsObserver {}
