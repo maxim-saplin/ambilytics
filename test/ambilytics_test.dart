@@ -56,6 +56,24 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
+  test('Ambylitics sends custom_event', () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+    var mock = MockAmbilyticsSession();
+    setMockAmbilytics(mock);
+    // Hiding MP paramas to use mocked instance instead
+    await initAnalytics(
+        //measurementId: 'someId', apiSecret: 'someSecret',
+        fallbackToMP: true);
+    expect(isAmbyliticsInitialized, true);
+    clearInteractions(mock);
+    sendEvent('custom_event', {'custom_param': 'val1'});
+    final captured =
+        verify(() => mock.sendEvent(captureAny(), captureAny())).captured;
+    expect(captured[0], 'custom_event');
+    expect((captured[1] as Map)['custom_param'], 'val1');
+    debugDefaultTargetPlatformOverride = null;
+  });
+
   test('Firebase analytics sends app_launch event with correct platfrom',
       () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
@@ -65,7 +83,6 @@ void main() {
         parameters: any(named: 'parameters'),
         callOptions: any(named: 'callOptions'))).thenAnswer((_) async {});
     setMockFirebase(mock);
-    // Hiding MP paramas to use mocked instance instead
     await initAnalytics(fallbackToMP: true);
     expect(isAmbyliticsInitialized, true);
     final captured = verify(() => mock.logEvent(
@@ -76,8 +93,28 @@ void main() {
     expect((captured[1] as Map)['platform'], 'iOS');
     debugDefaultTargetPlatformOverride = null;
   });
+
+  test('Firebase analytics sends custom_event', () async {
+    var mock = MockFirebaseAnalytics();
+    setMockFirebase(mock);
+    when(() => mock.logEvent(
+        name: any(named: 'name'),
+        parameters: any(named: 'parameters'),
+        callOptions: any(named: 'callOptions'))).thenAnswer((_) async {});
+    await initAnalytics(fallbackToMP: true);
+    expect(isAmbyliticsInitialized, true);
+    clearInteractions(mock);
+    sendEvent('custom_event', {'custom_param': 'val1'});
+    final captured = verify(() => mock.logEvent(
+        name: captureAny(named: 'name'),
+        parameters: captureAny(named: 'parameters'),
+        callOptions: captureAny(named: 'callOptions'))).captured;
+    expect(captured[0], 'custom_event');
+    expect((captured[1] as Map)['custom_param'], 'val1');
+  });
 }
 
+//TODO, better add separate widget tests when /example is ready and simulate navigation there
 class MockAmbyliticsObserver extends Mock implements AmbyliticsObserver {}
 
 class MockFirebaseAnalytics extends Mock implements FirebaseAnalytics {}
