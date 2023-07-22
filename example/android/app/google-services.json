@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "777863418226",
+    "project_id": "ambilytics-example",
+    "storage_bucket": "ambilytics-example.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777863418226:android:d51fad29eb40783199cdeb",
+        "android_client_info": {
+          "package_name": "com.example.example"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "777863418226-268vdcg3ictnshtfnmkp237un0ls8e3l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsqFny_36-I3RzOL1JLEk32E73Rxuxt1E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "777863418226-268vdcg3ictnshtfnmkp237un0ls8e3l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

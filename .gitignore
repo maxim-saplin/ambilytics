@@ -8,3 +8,4 @@ pubspec.lock
 .DS_Store
 build/
 example/lib/config.prod.dart
+example/lib/firebase_options.prod.dart
