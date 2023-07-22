@@ -1,2 +1,2 @@
-final String apiKey = 'abc';
-final String measurementId = '';
+const String apiKey = 'abc';
+const String measurementId = '';

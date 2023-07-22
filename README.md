@@ -5,7 +5,7 @@ As of now, the Firebase Analytics Flutter plugin (from Google team) works with 4
 *Ambilytics* Flutter plugin solves this issue by enabling GA4 Measurement Protocol for unsupported platforms (Windows and Linux) and creating a unified interface that abstracts away interaction with 2 different analytics backends:
 - Google/Firebase Analytics
     - You enable and configure it for any of the required platforms (Android, iOS, macOS, Web)
-    - *Note:* as of July 2023 macOS is in Beta and may be displayed as iOS platform in Firebase/Google Analytics consoles, just choose proper Data Stream name for it in GA console
+    - *Note:* as of July 2023 macOS is in Beta and may be displayed as iOS platform in Firebase/Google Analytics consoles, choose proper Data Stream name for it in GA console
 - GA4 Measurement Protocol
     - You create a separate Web stream to track events sent from Windows/Linux
 
@@ -33,7 +33,7 @@ Check `/example` folder for usage detail.
 
 # Configuring Analytics
 
-Historically different now Google Analytics and Firebase Analytics are closely integrated products. In order to proceed you'll need Google account. Using this account you will set-up a project in Firebase Console which will be linked to a property in Google Analytics. All reports will be available in Google Analytics Console.
+Historically Firebase Analytics was used for app analytics and Google Analytics for web. Now they are closely integrated products and used together. In order to proceed you'll need a Google Account. Using this account you will set-up a project in Firebase Console which will be linked to a property in Google Analytics. All reports will be available in Google Analytics Console.
 
 ## Start with Firebase
 
