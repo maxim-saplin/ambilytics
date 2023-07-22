@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:ambilytics/ambilytics.dart';
+import 'package:ambilytics/ambilytics.dart' as ambylitics;
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _incrementCounter() {
     setState(() {
       _counter++;
-      sendEvent(counterClicked, null);
+      ambylitics.sendEvent(counterClicked, null);
       // TODO, test in release mode what happens is predefined name is sent via Firebase
       //sendEvent('ad_click', null);
 

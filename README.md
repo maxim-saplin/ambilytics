@@ -35,7 +35,7 @@ Check `/example` folder for usage detail.
 
 Historically Firebase Analytics was used for app analytics and Google Analytics for web. Now they are closely integrated products and used together. In order to proceed you'll need a Google Account. Using this account you will set-up a project in Firebase Console which will be linked to a property in Google Analytics. All reports will be available in Google Analytics Console.
 
-## Start with Firebase
+## a) Start with Firebase/Google setup
 
 1. Set up Google Analytics console and create a new GA4 property.
 2. Create a new Firebase project and link it to your GA4 property.
@@ -43,6 +43,72 @@ Historically Firebase Analytics was used for app analytics and Google Analytics 
 4. Configure GA4 Measurement Protocol for Windows and Linux platforms.
 5. Add the *Ambilytics* Flutter package to your project.
 6. Set up the Ambilytics navigation observer in your Flutter project.
+
+## b) Add Ambilytics to your app
+
+1. Add `ambilytics` package to `dependencies` section of `pubspec.yaml`:
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter  
+  cupertino_icons: ^1.0.2
+  ambilytics:
+```
+2. Import it:
+```dart
+import 'package:ambilytics/ambilytics.dart' as ambilytics;
+```
+3. In the `main` function add initialization call:
+```dart
+void main() async {
+  // This one
+  await ambilytics.initAnalytics();
+  runApp(const MyApp());
+}
+```
+4. If you want to track navigation events, add navigator observer to `MaterialApp`, e.g.:
+
+```dart
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      // Here
+      navigatorObservers: ambilytics.isAmbyliticsInitialized
+          ? [
+              ambilytics.AmbyliticsObserver(
+                  routeFilter: ambilytics.anyRouteFilter,
+                  alwaySendScreenViewCust: true)
+            ]
+          : [],
+      routes: {
+        '/': (context) => HomeScreen(
+              title: 'Home',
+              analyticsError: ambilytics.initError,
+            ),
+        '/color/red': (context) => const ColorScreen(),
+        '/color/yellow': (context) => const ColorScreen()
+      },
+    );
+  }
+}
+```
+5. You can send custom events via Ambilytics `sendEvent` function:
+```dart
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+      // Here
+      ambylitics.sendEvent(counterClicked, null);
+    });
+  }
+```
 
 # Using Reports
 
