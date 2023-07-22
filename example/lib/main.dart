@@ -6,7 +6,12 @@ import 'home_screen.dart';
 
 void main() async {
   // Inits either Firebase Analytics (macOS, iOS, Android, Web) or GA4 Measurement Protocol, sends out app_launch event with current platform as param
-  await ambilytics.initAnalytics();
+  try {
+    await ambilytics.initAnalytics();
+  } catch (e) {
+    debugPrint('Error initializing ambilytics analytics: $e');
+  }
+
   runApp(const MyApp());
 }
 
