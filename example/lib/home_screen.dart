@@ -1,10 +1,13 @@
+import 'dart:async';
+
 import 'package:ambilytics/ambilytics.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.title});
+  const HomeScreen({super.key, required this.title, this.analyticsError});
 
   final String title;
+  final Object? analyticsError;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -14,6 +17,7 @@ const counterClicked = "counter_clicked";
 
 class _HomeScreenState extends State<HomeScreen> {
   int _counter = 0;
+  bool errorShown = false;
 
   void _incrementCounter() {
     setState(() {
@@ -28,6 +32,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (!errorShown && widget.analyticsError != null) {
+      Timer.run(() => ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error initializing analytics'))));
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),

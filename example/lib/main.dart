@@ -6,12 +6,8 @@ import 'home_screen.dart';
 
 void main() async {
   // Inits either Firebase Analytics (macOS, iOS, Android, Web) or GA4 Measurement Protocol, sends out app_launch event with current platform as param
-  try {
-    await ambilytics.initAnalytics();
-  } catch (e) {
-    debugPrint('Error initializing ambilytics analytics: $e');
-  }
 
+  await ambilytics.initAnalytics();
   runApp(const MyApp());
 }
 
@@ -34,7 +30,10 @@ class MyApp extends StatelessWidget {
             ]
           : [],
       routes: {
-        '/': (context) => const HomeScreen(title: 'Home'),
+        '/': (context) => HomeScreen(
+              title: 'Home',
+              analyticsError: ambilytics.initError,
+            ),
         '/color/red': (context) => const ColorScreen(),
         '/color/yellow': (context) => const ColorScreen()
       },

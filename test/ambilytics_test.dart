@@ -12,10 +12,21 @@ void main() {
   });
 
   test('Ambylitics with empty params doesn\'t get initilized', () async {
-    expect(() async => await initAnalytics(), throwsAssertionError);
+    // !In debug mode test fails due to frozen FB init
+
+    // // in fact this assertion doesn't hold cause there's endless wait inside when firebase starts inint and test just preoceeds due t no actual await
+    //expect(() async => await initAnalytics(), throwsAssertionError);
+    var flag = false;
+    try {
+      await initAnalytics();
+    } catch (_) {
+      flag = true;
+    }
+    expect(flag, true);
     expect(ambilytics, null);
     expect(firebaseAnalytics, null);
     expect(isAmbyliticsInitialized, false);
+    expect(initError, isNotNull);
   });
 
   test('Ambylitics with GA4 MP params gets initilized', () async {

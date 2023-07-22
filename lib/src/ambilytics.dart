@@ -14,12 +14,14 @@ import 'package:uuid/uuid.dart';
 
 AmbilyticsSession? _ambilytics;
 FirebaseAnalytics? _firebaseAnalytics;
+Object? _initError;
 
 bool _initialized = false;
 
 AmbilyticsSession? get ambilytics => _ambilytics;
 FirebaseAnalytics? get firebaseAnalytics => _firebaseAnalytics;
 bool get isAmbyliticsInitialized => _initialized;
+Object? get initError => _initError;
 
 @visibleForTesting
 void setMockAmbilytics(AmbilyticsSession ambilyticsSession) {
@@ -31,7 +33,7 @@ void setMockFirebase(FirebaseAnalytics fa) {
   _firebaseAnalytics = fa;
 }
 
-/// Prepares analytics for usage. Doesn't throw error in relase config, throws assertions in debug mode. If Ambylitucs fails to initialize [isAmbyliticsInitialized] returns false.
+/// Prepares analytics for usage. Doesn't throw errors, in debug mode throws assertions. If Ambylitucs fails to initialize [isAmbyliticsInitialized] returns false.
 /// If the platform is Android, iOS, macOS, or Web, Firebase Analytics will be used ([_firebaseAnalytics] instance will be initialized).
 /// Otherwise, GA4 Measurement protocol and custom events will be used ([_ambilytics] instance will be initialized).
 /// If [fallbackToMP] is true, than Measurement Protocol will be used if Firebase analytics fails to initialize. E.g. you can skip configuring Firebase Analytics in native projects and use MP for all platforms.
@@ -100,12 +102,14 @@ Future<void> initAnalytics(
         _sendAppLaunchEvent();
       }
     } else {
-      assert(true,
-          'Neither Firebase Analytics nor Measurement Protocol have been initialized');
+      _initError =
+          'Neither Firebase Analytics nor Measurement Protocol have been initialized';
+      assert(true, _initError);
     }
   } catch (e) {
-    assert(false, 'Can\'t init anaytics due to error.\n\n$e');
     _initialized = false;
+    _initError = e;
+    assert(false, 'Can\'t init anaytics due to error.\n\n$e');
   }
 }
 
