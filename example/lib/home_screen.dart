@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // TODO, test in release mode what happens is predefined name is sent via Firebase
       //sendEvent('ad_click', null);
 
-      debugPrint('counterClicked sent');
+      debugPrint('$counterClicked sent');
     });
   }
 
