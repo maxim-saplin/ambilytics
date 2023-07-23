@@ -124,6 +124,7 @@ void _sendAppLaunchEvent() {
 /// or Measurement Protocol [ambilytics]. It tries Firbase Analytics first (if it is initilized)
 /// then it goes to MP. It doesn't send events with both protocols, just one
 void sendEvent(String eventName, [Map<String, Object?>? params]) {
+  if (!_initialized) return;
   assert(!reservedGa4Events.contains(eventName));
   assert(eventName.isNotEmpty && eventName.length <= 40,
       'Event name should be between 1 and 40 characters long');

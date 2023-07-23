@@ -85,6 +85,21 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
+  test('Ambylitics can skip init and sendsEvent() doesn\'t throw', () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+    var mock = MockAmbilyticsSession();
+    setMockAmbilytics(mock);
+    // Hiding MP paramas to use mocked instance instead
+    await initAnalytics(dontInintilize: true);
+    expect(isAmbyliticsInitialized, false);
+    clearInteractions(mock);
+    sendEvent('custom_event', {'custom_param': 'val1'});
+    final captured =
+        verifyNever(() => mock.sendEvent(captureAny(), captureAny())).captured;
+    expect(captured.length, 0);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
   test('Firebase analytics sends app_launch event with correct platfrom',
       () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
