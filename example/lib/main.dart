@@ -2,12 +2,14 @@ import 'package:ambilytics/ambilytics.dart' as ambilytics;
 import 'package:ambilytics_example/color_screen.dart';
 import 'package:flutter/material.dart';
 
+import 'firebase_options.dart';
 import 'home_screen.dart';
 
 void main() async {
   // Inits either Firebase Analytics (macOS, iOS, Android, Web) or GA4 Measurement Protocol, sends out app_launch event with current platform as param
 
-  await ambilytics.initAnalytics();
+  await ambilytics.initAnalytics(
+      firebaseOptions: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 

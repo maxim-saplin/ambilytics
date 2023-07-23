@@ -9,3 +9,4 @@ pubspec.lock
 build/
 example/lib/config.prod.dart
 example/lib/firebase_options.prod.dart
+example/lib/firebase_options.dart

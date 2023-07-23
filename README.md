@@ -35,12 +35,12 @@ Check `/example` folder for usage detail.
 
 Historically Firebase Analytics was used for app analytics and Google Analytics for web. Now they are closely integrated products and used together. In order to proceed you'll need a Google Account. Using this account you will set-up a project in Firebase Console which will be linked to a property in Google Analytics. All reports will be available in Google Analytics Console.
 
-Bellow you can find detailed instruction for 2 scenarious:
+Bellow you can find detailed instruction for 2 scenarios:
 1. Adding analytics from scratch
 2. Adding it to existing Flutter app
 
 
-## a) Start with Firebase/Google setup
+## a) Setup from scratch
 
 The below instructions are based on this manual: https://firebase.google.com/docs/flutter/setup?platform=ios
 
@@ -59,13 +59,16 @@ dart pub global activate flutterfire_cli
 
 ### Configure Firebase/Google Analytics for each target platform
 1. In terminal change directory to your Flutter project
-2. Run
+2. Run Firebase core initialization script
 ```bash
 flutterfire configure
 ```
 3. Use the generated `firebase_options.dart` to initialize `Ambylitics` (see below) 
+4. Open Firebase Console (https://console.firebase.google.com/) and choose used above project. Click `Analytics->Dashboard` tab to the left, click `Enable Google Analytics` button. You will be presented with a wizard that will link Google Analytics account to Firebase project. At the last step `Add the Google Analytics SDK` just click `Finish` button as `flutterfire configure` command above has already taken care of that.
 
-Notes:
+At this point you have Firebase/Google Analytics setup for 4 platforms (Android, iOS, macOS and web). Next you need to configure Measurement Protocol to cover Windows and Linux and start using Ambylitics in your Dart code and start sending events.
+
+**Notes:**
 - Running the command will show the list of existing Firebase projects to choose one OR will suggest to create a new project.
 - Firebase Analytics requires native projects to be configured. I.e. various plists for macOS/iOS, google-services.json for Android etc. The above command takes care of that
 - Each time a new platform is added to Flutter app you need to rerun the above command
@@ -105,13 +108,10 @@ Learn more about using this file and next steps from the documentation:
  > https://firebase.google.com/docs/flutter/setup
 ```
 
+### Measurement Protocol 
 
-1. Set up Google Analytics console and create a new GA4 property.
-2. Create a new Firebase project and link it to your GA4 property.
-3. Add Firebase Analytics for Android, iOS, macOS, and Web platforms.
-4. Configure GA4 Measurement Protocol for Windows and Linux platforms.
-5. Add the *Ambilytics* Flutter package to your project.
-6. Set up the Ambilytics navigation observer in your Flutter project.
+
+## b) Adding to Flutter app already using Firebase Analytics
 
 # Using Ambilytics in your app
 
@@ -185,10 +185,20 @@ class MyApp extends StatelessWidget {
 
 # Using Reports
 
+The reports can be see in both Google Analytics Console (https://analytics.google.com) and Firebase Console (https://console.firebase.google.com/). They are same.
+
 1. Access Google Analytics console to view reports for each platform.
 2. Use custom dimensions to differentiate events by platform (Android, Linux, etc.) in GA4 reports.
 3. Customize your reports to display custom events and event parameters.
 4. Utilize Realtime view to monitor custom event parameters.
+
+# Known issues/Troubleshooting
+
+## 1. Can't build macOS/iOS project with 'Error run pod install' or alike
+In terminal go t macOS or iOS folder, remove `Podfile.lock` and run `pod repo update`
+
+## 2. No data in Google reports
+All reports outside `Realtime` can take up to a day to be in sync
 
 # Contributing
 
