@@ -40,6 +40,7 @@ void setMockFirebase(FirebaseAnalytics fa) {
 /// If [dontInintilize] is `true`, analytics will not be initialized, any analytics calls will be ingonred,
 /// [_firebaseAnalytics] and [_ambilytics] instances will be null. Usefull for the scanarious when toy wish to disable analytics.
 /// If [sendAppLaunch] is true, "app_launch" will be ent with "platfrom" param value corresponding runtime platform (i.e. Windows)
+/// [firebaseOptions] forwards options (e.g. generated via `flutterfire configure`) to `Firebase.initializeApp()`.
 /// [apiSecret] and [measurementId] must be set in order to enable GA4 Measurement protocol and have [_ambilytics] initialized.
 /// [userId] allows overriding user identifier. If not provided, default user ID will be used by Firebase Analytics OR
 /// or a GUID will be created and put to shared_preferences storage (for Windows and Linux).
@@ -47,6 +48,7 @@ Future<void> initAnalytics(
     {bool dontInintilize = false,
     bool fallbackToMP = false,
     bool sendAppLaunch = true,
+    FirebaseOptions? firebaseOptions,
     String? measurementId,
     String? apiSecret,
     String? userId}) async {
@@ -58,7 +60,7 @@ Future<void> initAnalytics(
         defaultTargetPlatform == TargetPlatform.macOS ||
         kIsWeb) {
       try {
-        await Firebase.initializeApp();
+        await Firebase.initializeApp(options: firebaseOptions);
         _firebaseAnalytics = FirebaseAnalytics.instance;
         if (userId != null) {
           await _firebaseAnalytics!.setUserId(id: userId);
