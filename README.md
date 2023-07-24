@@ -218,8 +218,11 @@ Go to `android/build.gradle` and update `com.google.gms:google-services` version
 ## 3. Android build fails (minSdkVersion mismatch)
 Go to `android/app/build.gradle` and change `minSdkVersion` version from `flutter.minSdkVersion` to `19`.
 
-## 4. No data in Google reports
+## 4. No data in Google Analytics reports
 All reports outside `Realtime` can take up to a day to be in sync
+
+## 4. No data in Realtime reports (on Android, iOS, macOS)
+For mobile platforms (and macOS) Firebase Analytics uploads/processes data in batches, i.e. it takes some time to collect and than send and display it (presumably for battery saving). As a result you get jagged events (i.e. some come right away, some take time).
 
 # Contributing
 
