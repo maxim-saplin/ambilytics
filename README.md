@@ -197,7 +197,28 @@ The reports can be see in both Google Analytics Console (https://analytics.googl
 ## 1. Can't build macOS/iOS project with 'Error run pod install' or alike
 In terminal go t macOS or iOS folder, remove `Podfile.lock` and run `pod repo update`
 
-## 2. No data in Google reports
+## 2. Android build fails (:app:mapReleaseSourceSetPaths)
+If you get error 
+```
+Execution failed for task ':app:mapReleaseSourceSetPaths'.
+> Error while evaluating property 'extraGeneratedResDir' of task ':app:mapReleaseSourceSetPaths'
+```
+
+Go to `android/build.gradle` and update `com.google.gms:google-services` version, e.g.:
+```gradle
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.3.0'
+        // START: FlutterFire Configuration
+        classpath 'com.google.gms:google-services:4.3.15'
+        // END: FlutterFire Configuration
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+```
+
+## 3. Android build fails (minSdkVersion mismatch)
+Go to `android/app/build.gradle` and change `minSdkVersion` version from `flutter.minSdkVersion` to `19`.
+
+## 4. No data in Google reports
 All reports outside `Realtime` can take up to a day to be in sync
 
 # Contributing

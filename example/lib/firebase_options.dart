@@ -44,8 +44,8 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCdHbfUqQLlNYZg6u2sdh6rcZ0lY22p5r8',
-    appId: '1:777853418226:web:69ca4a4f2a495cbc99cdeb',
+    apiKey: 'AIzaSyCdHbBUqQLlNYZg6u2sdh6rcZ0lY22p5r8',
+    appId: '1:777863418226:web:69ca4a4f2a495cbc99cdeb',
     messagingSenderId: '777863418226',
     projectId: 'ambilytics-example',
     authDomain: 'ambilytics-example.firebaseapp.com',
@@ -53,32 +53,32 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBsqFsy_36-I3RzOL1JLEk32E73Rxuxt1E',
-    appId: '1:777853418226:android:d51fad29eb40783199cdeb',
+    apiKey: 'AIzaSyBsqFny_36-I3RzOL1JLEk32E73Rxuxt1E',
+    appId: '1:777863418226:android:d51fad29eb40783199cdeb',
     messagingSenderId: '777863418226',
     projectId: 'ambilytics-example',
     storageBucket: 'ambilytics-example.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDLffSswcB36bfvtqd7dgRiWuZUpN3Ur2Q',
-    appId: '1:777853418226:ios:5e6533794fef227899cdeb',
+    apiKey: 'AIzaSyDLUfSswcB36bfvtqd7dgRiWuZUpN3Ur2Q',
+    appId: '1:777863418226:ios:5e6533794fef227899cdeb',
     messagingSenderId: '777863418226',
     projectId: 'ambilytics-example',
     storageBucket: 'ambilytics-example.appspot.com',
     iosClientId:
-        '777853418226-sn800li4o0eimbt5iim56ihv4mv5ff2n.apps.googleusercontent.com',
+        '777863418226-sn800li4o0eimbt5iim56ihv4mv5ff2n.apps.googleusercontent.com',
     iosBundleId: 'com.example.example',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIdaSyDLUfSswcB36bfvtqd7dgRiWuZUpN3Ur2Q',
-    appId: '1:777853418226:ios:e32265cdbc373d6599cdeb',
+    apiKey: 'AIzaSyDLUfSswcB36bfvtqd7dgRiWuZUpN3Ur2Q',
+    appId: '1:777863418226:ios:e32265cdbc373d6599cdeb',
     messagingSenderId: '777863418226',
     projectId: 'ambilytics-example',
     storageBucket: 'ambilytics-example.appspot.com',
     iosClientId:
-        '777853418226-i480uo7to59qk5uu43sl7hlg34b3eqjq.apps.googleusercontent.com',
+        '777863418226-i480uo7to59qk5uu43sl7hlg34b3eqjq.apps.googleusercontent.com',
     iosBundleId: 'com.example.example.RunnerTests',
   );
 }
