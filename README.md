@@ -63,8 +63,16 @@ dart pub global activate flutterfire_cli
 ```bash
 flutterfire configure
 ```
-3. Use the generated `firebase_options.dart` to initialize `Ambylitics` (see below) 
-4. Open Firebase Console (https://console.firebase.google.com/) and choose used above project. Click `Analytics->Dashboard` tab to the left, click `Enable Google Analytics` button. You will be presented with a wizard that will link Google Analytics account to Firebase project. At the last step `Add the Google Analytics SDK` just click `Finish` button as `flutterfire configure` command above has already taken care of that.
+3. **Fix macOS** networking. Edit `macos\Runner\DebugProfile.entitlements` and `macos\Runner\Release.entitlements` and add `com.apple.security.network.client`, e.g.:
+```
+	...
+  <key>com.apple.security.network.client</key>
+	<true/>
+</dict>
+</plist>
+```
+4. Use the generated `firebase_options.dart` to initialize `Ambylitics` (see below) 
+5. Open Firebase Console (https://console.firebase.google.com/) and choose used above project. Click `Analytics->Dashboard` tab to the left, click `Enable Google Analytics` button. You will be presented with a wizard that will link Google Analytics account to Firebase project. At the last step `Add the Google Analytics SDK` just click `Finish` button as `flutterfire configure` command above has already taken care of that.
 
 At this point you have Firebase/Google Analytics setup for 4 platforms (Android, iOS, macOS and web). Next you need to configure Measurement Protocol to cover Windows and Linux and start using Ambylitics in your Dart code and start sending events.
 
@@ -77,7 +85,11 @@ At this point you have Firebase/Google Analytics setup for 4 platforms (Android,
 - You can have each platform configured individually/manually without any CLI (e.g. follow the instructions from Firebase console)
 - You can even skip Firebase set-up and have all 6 platforms using Measurement Protocol (assuming the limitations mentioned above)
 
+<details>
+  <summary>
 Here's an example for `flutterfire configure` output:
+  </summary>
+
 ```bash
 user@users-MacBook-Pro example % flutterfire configure
 i Found 4 Firebase projects.                                                                                                                             
@@ -107,6 +119,7 @@ macos     1:777853418226:ios:e32e65cdbc373d6599cdeb
 Learn more about using this file and next steps from the documentation:
  > https://firebase.google.com/docs/flutter/setup
 ```
+</details>
 
 ### Measurement Protocol 
 
@@ -221,5 +234,8 @@ Go to `android/app/build.gradle` and change `minSdkVersion` version from `flutte
 ## 4. No data in Google Analytics reports
 All reports outside `Realtime` can take up to a day to be in sync
 
-## 4. No data in Realtime reports (on Android, iOS, macOS)
+## 5. No data in Realtime reports (on Android, iOS)
 For mobile platforms (Android, iOS) Firebase Analytics uploads/processes data in batches, i.e. it takes some time to collect and than send and display it (presumably for battery saving). As a result you get jagged events (i.e. some come right away, some take time).
+
+## 5. No data reports from macOS
+Check the above manual for *Fix macOS* and update `DebugProfile.entitlements` and `Release.entitlements`
