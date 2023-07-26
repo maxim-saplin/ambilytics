@@ -107,6 +107,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: const Text('Show Dialog'),
             ),
+            const SizedBox(
+              height: 16,
+            ),
+            Row(mainAxisSize: MainAxisSize.min, children: [
+              Checkbox(value: true, onChanged: (val) {}),
+              const Text("share analytics")
+            ])
           ],
         ),
       ),

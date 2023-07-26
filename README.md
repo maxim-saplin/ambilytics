@@ -1,15 +1,15 @@
 Enable Google Analytics for **all** Flutter platforms: Android, iOS, macOS, Web, Windows, and Linux.
 
-As of now, the Firebase Analytics Flutter plugin (from Google team) works with 4 platforms (Android, iOS, macOS, and Web). This is due to Google Analytics 4 (GA4) limitations. For Windows and Linux, there's no out-of-the-box support.
+Currently official Flutter plugin for Firebase Analytics (which uses Google Analytics behind the scenes) works with 4 platforms (Android, iOS, macOS, and Web). For Windows and Linux, there's no out-of-the-box support.
 
-*Ambilytics* Flutter plugin solves this issue by enabling GA4 Measurement Protocol for unsupported platforms (Windows and Linux) and creating a unified interface that abstracts away interaction with 2 different analytics backends:
+*Ambilytics* Flutter plugin solves this issue by enabling Google Analytics 4 (GA4) Measurement Protocol for unsupported platforms (Windows and Linux) and creating a unified interface that abstracts away interaction with 2 different analytics backends:
 - Google/Firebase Analytics
     - You enable and configure it for any of the required platforms (Android, iOS, macOS, Web)
     - *Note:* as of July 2023 macOS is in Beta and may be displayed as iOS platform in Firebase/Google Analytics consoles, choose proper Data Stream name for it in GA console
 - GA4 Measurement Protocol
     - You create a separate Web stream to track events sent from Windows/Linux
 
-This way, no matter the platform you target with your Flutter project. By creating Firebase project, configuring Google Analytics property, importing the package, and setting navigation observer, you get the capability to send `app_start` and `screen_view` events, as well as send any custom events.
+By creating Firebase project, configuring Google Analytics property, importing the package, and setting navigation observer, you get the capability to send standard and app events to Google Analytics and see them in Reports.
 
 # Features
 
@@ -20,11 +20,14 @@ This way, no matter the platform you target with your Flutter project. By creati
     - When `AmbyliticsObserver` is configured `screen_view` is sent on Firebase platforms along with `screen_view_cust` via Measurement Protocol (either for all platforms or only Windows/Linux, configurable)
 - Custom event tracking
 - Configurable navigation observer for easy integration
+  - It can register `showDialog()` actions as navigation events
+- Disable analytics in one place, e.g. according to user changing preferences (a checkbox to share analytics)
 
 Check `/example` folder for usage detail.
 
 # Challenges
 
+Measurement Protocol can't be a complete replacement for the default Google Analytics backed:
 - Limited standard reports in GA4 for unsupported platforms
     - You might need to create custom dimensions and customize standard reports
 - Measurement protocol doesn't support sending standard events, e.g. instead if `screen_view` events sent via Firebase, a custom event `screen_view_cust` is sent (with screen name param). 
@@ -33,11 +36,11 @@ Check `/example` folder for usage detail.
 
 # Configuring Analytics
 
-Historically Firebase Analytics was used for app analytics and Google Analytics for web. Now they are closely integrated products and used together. In order to proceed you'll need a Google Account. Using this account you will set-up a project in Firebase Console which will be linked to a property in Google Analytics. All reports will be available in Google Analytics Console.
+Historically Firebase Analytics was used for app analytics and Google Analytics for web. Now they are integrated and used together. In order to proceed you'll need a Google Account. Using this account you will set-up a project in Firebase Console which will be linked to an account/property in Google Analytics. All reports will be available in Google Analytics Console.
 
-Bellow you can find detailed instruction for 2 scenarios:
+Bellow you can find instructions for 2 scenarios:
 1. Adding analytics from scratch
-2. Adding it to existing Flutter app
+2. Adding it to existing Flutter app using Firebase Analytics
 
 
 ## a) Setup from scratch
@@ -74,16 +77,16 @@ flutterfire configure
 4. Use the generated `firebase_options.dart` to initialize `Ambylitics` (see below) 
 5. Open Firebase Console (https://console.firebase.google.com/) and choose used above project. Click `Analytics->Dashboard` tab to the left, click `Enable Google Analytics` button. You will be presented with a wizard that will link Google Analytics account to Firebase project. At the last step `Add the Google Analytics SDK` just click `Finish` button as `flutterfire configure` command above has already taken care of that.
 
-At this point you have Firebase/Google Analytics setup for 4 platforms (Android, iOS, macOS and web). Next you need to configure Measurement Protocol to cover Windows and Linux and start using Ambylitics in your Dart code and start sending events.
+At this point you have Firebase/Google Analytics setup for up-to 4 platforms (Android, iOS, macOS and web). Next you need to [Configure Measurement Protocol](#measurement-protocol) to cover Windows and Linux and [Start using Ambylitics in your app](#using-ambilytics-in-your-app) and start sending events.
 
 **Notes:**
 - Running the command will show the list of existing Firebase projects to choose one OR will suggest to create a new project.
 - Firebase Analytics requires native projects to be configured. I.e. various plists for macOS/iOS, google-services.json for Android etc. The above command takes care of that
+- You can have each platform configured individually/manually without any CLI (e.g. follow the instructions from Firebase console/Google Analytics console on configuring each native part individually) - though CLI seems easier and less error-prone
 - Each time a new platform is added to Flutter app you need to rerun the above command
 - App ID, API keys etc. will be saved to a newly created `firebase_options.dart` file
 - This step only covers Android, iOS, macOS and Web platforms
-- You can have each platform configured individually/manually without any CLI (e.g. follow the instructions from Firebase console)
-- You can even skip Firebase set-up and have all 6 platforms using Measurement Protocol (assuming the limitations mentioned above)
+- You can  skip Firebase set-up and have all 6 platforms using Measurement Protocol (assuming the challenges mentioned above)
 
 <details>
   <summary>
@@ -121,10 +124,14 @@ Learn more about using this file and next steps from the documentation:
 ```
 </details>
 
-### Measurement Protocol 
-
-
 ## b) Adding to Flutter app already using Firebase Analytics
+
+Given you have been using Firebase Analytics plugin, native platforms are already set (the above a) step is not necessary), you are using `FirebaseAnalytics.logEvent()` to send events and `FirebaseAnalyticsObserver` to plug-in to navigation events. In this case in order to switch to `Ambylytics` you have to:
+1. [Enable Measurement Protocol](#measurement-protocol) as described below
+2. Replace all occurrences of `FirebaseAnalytics.logEvent()` with `sendEvent()` from this package and replace `FirebaseAnalyticsObserver` with `AmbyliticsObserver`. [See using Ambylitics in your app](#using-ambilytics-in-your-app) 
+
+# Measurement Protocol 
+
 
 # Using Ambilytics in your app
 
