@@ -55,5 +55,5 @@ Future<void> saveShareAnalyticsPreference(bool value) async {
 
 Future<bool> getShareAnalyticsPreference() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getBool(_key) ?? false;
+  return prefs.getBool(_key) ?? true;
 }
