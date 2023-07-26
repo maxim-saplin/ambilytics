@@ -11,9 +11,11 @@ dependencies:
   flutter:
     sdk: flutter  
   cupertino_icons: ^1.0.2
-  firebase_core:
+  firebase_core: ^2.15.0
+  shared_preferences: ^2.2.0
   ambilytics:
     path: ../
+
 
 dev_dependencies:
   flutter_test:

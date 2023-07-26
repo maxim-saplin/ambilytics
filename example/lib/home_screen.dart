@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:ambilytics/ambilytics.dart' as ambylitics;
+import 'package:ambilytics_example/preferences.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -110,10 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 16,
             ),
-            Row(mainAxisSize: MainAxisSize.min, children: [
-              Checkbox(value: true, onChanged: (val) {}),
-              const Text("share analytics")
-            ])
+            const ShareAnalyticsPreference()
           ],
         ),
       ),

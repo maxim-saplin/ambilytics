@@ -8,20 +8,29 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
-// abstract class Events {
-//   static const counterClicked = "counter_clicked";
-// }
-
 AmbilyticsSession? _ambilytics;
 FirebaseAnalytics? _firebaseAnalytics;
 Object? _initError;
 
+// Analytics can be initilize but disabled in case disabling occures after initialization
 bool _initialized = false;
+bool _disabled = true;
 
+/// GA4 Measurement Protocol backend
 AmbilyticsSession? get ambilytics => _ambilytics;
+
+/// Firebase Analytics backend
 FirebaseAnalytics? get firebaseAnalytics => _firebaseAnalytics;
-bool get isAmbyliticsInitialized => _initialized;
+
+/// Whether analytics initialization was succesfully completed
+bool get isAmbilyticsInitialized => _initialized;
+
+/// If error occured during initialization error is not thrown yet detail is saved in this property
 Object? get initError => _initError;
+
+/// Stop or resume sending events
+bool get isAmbilyticsDisabled => _disabled;
+set isAmbilyticsDisabled(value) => _disabled = value;
 
 @visibleForTesting
 void setMockAmbilytics(AmbilyticsSession ambilyticsSession) {
@@ -33,11 +42,18 @@ void setMockFirebase(FirebaseAnalytics fa) {
   _firebaseAnalytics = fa;
 }
 
-/// Prepares analytics for usage. Doesn't throw errors, in debug mode throws assertions. If Ambylitucs fails to initialize [isAmbyliticsInitialized] returns false.
+@visibleForTesting
+void resetInitialized() {
+  _initialized = false;
+  _ambilytics = null;
+  _firebaseAnalytics = null;
+}
+
+/// Prepares analytics for usage. Doesn't throw errors, in debug mode throws assertions. If Ambylitucs fails to initialize [isAmbilyticsInitialized] returns false.
 /// If the platform is Android, iOS, macOS, or Web, Firebase Analytics will be used ([_firebaseAnalytics] instance will be initialized).
 /// Otherwise, GA4 Measurement protocol and custom events will be used ([_ambilytics] instance will be initialized).
 /// If [fallbackToMP] is true, than Measurement Protocol will be used if Firebase analytics fails to initialize. E.g. you can skip configuring Firebase Analytics in native projects and use MP for all platforms.
-/// If [dontInintilize] is `true`, analytics will not be initialized, any analytics calls will be ingonred,
+/// If [disableAnalytics] is `true`, analytics will not be initialized, any analytics calls will be ingonred,
 /// [_firebaseAnalytics] and [_ambilytics] instances will be null. Usefull for the scanarious when toy wish to disable analytics.
 /// If [sendAppLaunch] is true, "app_launch" will be ent with "platfrom" param value corresponding runtime platform (i.e. Windows)
 /// [firebaseOptions] forwards options (e.g. generated via `flutterfire configure`) to `Firebase.initializeApp()`.
@@ -45,14 +61,15 @@ void setMockFirebase(FirebaseAnalytics fa) {
 /// [userId] allows overriding user identifier. If not provided, default user ID will be used by Firebase Analytics OR
 /// or a GUID will be created and put to shared_preferences storage (for Windows and Linux).
 Future<void> initAnalytics(
-    {bool dontInintilize = false,
+    {bool disableAnalytics = false,
     bool fallbackToMP = false,
     bool sendAppLaunch = true,
     FirebaseOptions? firebaseOptions,
     String? measurementId,
     String? apiSecret,
     String? userId}) async {
-  if (dontInintilize) return;
+  _disabled = disableAnalytics;
+  if (_initialized) return;
   try {
     WidgetsFlutterBinding.ensureInitialized();
     if (defaultTargetPlatform == TargetPlatform.android ||
@@ -66,7 +83,8 @@ Future<void> initAnalytics(
           await _firebaseAnalytics!.setUserId(id: userId);
         }
         _initialized = true;
-        if (sendAppLaunch) {
+
+        if (sendAppLaunch && !_disabled) {
           _sendAppLaunchEvent();
         }
 
@@ -100,7 +118,7 @@ Future<void> initAnalytics(
     }
     if (_ambilytics != null || _firebaseAnalytics != null) {
       _initialized = true;
-      if (sendAppLaunch) {
+      if (sendAppLaunch && !_disabled) {
         _sendAppLaunchEvent();
       }
     } else {
@@ -125,6 +143,8 @@ void _sendAppLaunchEvent() {
 /// then it goes to MP. It doesn't send events with both protocols, just one
 void sendEvent(String eventName, [Map<String, Object?>? params]) {
   if (!_initialized) return;
+  if (_disabled) return;
+
   assert(!reservedGa4Events.contains(eventName));
   assert(eventName.isNotEmpty && eventName.length <= 40,
       'Event name should be between 1 and 40 characters long');
@@ -157,8 +177,8 @@ String? defaultNameExtractor(RouteSettings settings) => settings.name;
 /// of if FirebaseAnalytics is not configured
 /// the app uses Measurement Protocol and sends custom 'screen_view_cust'
 /// event together with screen name.
-class AmbyliticsObserver extends RouteObserver<ModalRoute<dynamic>> {
-  AmbyliticsObserver(
+class AmbilyticsObserver extends RouteObserver<ModalRoute<dynamic>> {
+  AmbilyticsObserver(
       {this.nameExtractor = defaultNameExtractor,
       this.routeFilter = defaultRouteFilter,
       this.alwaySendScreenViewCust = false,
@@ -196,6 +216,9 @@ class AmbyliticsObserver extends RouteObserver<ModalRoute<dynamic>> {
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    if (!_initialized) return;
+    if (_disabled) return;
+
     super.didPush(route, previousRoute);
     if (faObserver != null) {
       faObserver!.didPush(route, previousRoute);
@@ -208,6 +231,9 @@ class AmbyliticsObserver extends RouteObserver<ModalRoute<dynamic>> {
 
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
+    if (!_initialized) return;
+    if (_disabled) return;
+
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
     if (faObserver != null) {
       faObserver!.didReplace(newRoute: newRoute, oldRoute: oldRoute);
@@ -220,6 +246,9 @@ class AmbyliticsObserver extends RouteObserver<ModalRoute<dynamic>> {
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    if (!_initialized) return;
+    if (_disabled) return;
+
     super.didPop(route, previousRoute);
     if (faObserver != null) {
       faObserver!.didPop(route, previousRoute);
@@ -251,8 +280,6 @@ class AmbilyticsSession {
   final bool useValidationServer;
 
   /// Sends an event to the analytics service.
-  /// If platform is Android, iOS, macOS, or Web, Firebase Analytics will be used.
-  /// Otherwise, GA4 Measurement protocol and custom events will be used.
   /// [eventName] is the name of the event. Max length is 40 characters.
   /// [params] is a Map of additional parameters to attach to the event.
   void sendEvent(String eventName, Map<String, Object?>? params) {
@@ -289,10 +316,8 @@ class AmbilyticsSession {
       'Content-Type': 'application/json',
     };
 
-    //if (window.locales.isNotEmpty) {
     headers['Accept-Language'] =
         PlatformDispatcher.instance.locale.toLanguageTag();
-    //}
 
     http.post(
       Uri.parse(
