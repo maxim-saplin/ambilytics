@@ -151,7 +151,7 @@ To enable essential data sent from `Windows` and `Linux` you will have to create
   - Skip installation instructions
   - Copy `Measurement ID`
   - Click `Measurement Protocol API secrets` in the same view below. Create a new API secret and copy it.
-  - Both values must be provided to `init()` method to get Measurement Protocol working
+  - Both values must be provided to `init()` method to get Measurement Protocol working (see next section)
 
 
 # Using Ambilytics in your app
@@ -230,7 +230,7 @@ class MyApp extends StatelessWidget {
 
 # Using Reports
 
-The reports (same ones) can be see in both Google Analytics Console (https://analytics.google.com/analytics/web/) and Firebase Console (https://console.firebase.google.com/).
+The reports can be seen in both Google Analytics Console (https://analytics.google.com/analytics/web/) and Firebase Console (https://console.firebase.google.com/).
 
 ## Ambilytics custom events
 
@@ -243,9 +243,17 @@ The package automatically sends 2 custom events:
 ## Seeing custom events' params
 
 Parameters of custom events (the above 2 and all sent via `sendEvent()`) by default can only be seen in Realtime view. For other reports a custom dimension must be created:
-Admin (gear icon at the bottom left) -> Custom definitions -> Create custom dimensions -> type in custom event and param -> go to reports and pick custom dimension.
-Quote from docs: "To see the event parameter values, you must create a custom dimension or metric for each event parameter. Once Analytics processes the custom dimension or metric, you can add it to your custom reports, audiences, explorations, and segments, and as secondary dimensions in standard reports."
+- Admin (gear icon at the bottom left) -> Custom definitions -> Create custom dimensions -> type in dimension name and param -> go to reports and pick custom dimension.
+  - Note that you don't have to type in event name, just a description name of dimension AND exact name of parameter
+- Make sure you add dimensions for params of  `app_launch` and `screen_view_cust`
+  - E.g. create `app_launch_platform` dimension with `platform` param and `screen_view_cust_screen` with `screen_name` parameter
+
+Quote from Google docs: 
+*To see the event parameter values, you must create a custom dimension or metric for each event parameter. Once Analytics processes the custom dimension or metric, you can add it to your custom reports, audiences, explorations, and segments, and as secondary dimensions in standard reports."*
+
 Note that up to 1 day might be required to get updated data in reports outside Realtime view.
+
+After that you should be able to see custom events and their params in reports, e.g. pick `Engagement -> Events` and click + sign in the `Event name` column and choose `Custom -> [Dimension you created]`
 
 # Known issues/Troubleshooting
 
