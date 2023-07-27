@@ -12,6 +12,8 @@ void main() async {
   var disable = !(await getShareAnalyticsPreference());
 
   await ambilytics.initAnalytics(
+      measurementId: 'G-6R363DDKTZ',
+      apiSecret: 'uzUv6h_iRS6hEt_sIVtTTA',
       disableAnalytics: disable,
       firebaseOptions: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
