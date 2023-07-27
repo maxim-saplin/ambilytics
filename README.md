@@ -183,7 +183,6 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core:
   ambilytics:
-    path: ../
 ```
 2. Import Ambilytics:
 ```dart
