@@ -1,6 +1,6 @@
 Enable Google Analytics for **all** Flutter platforms: Android, iOS, macOS, Web, Windows, and Linux.
 
-Currently official Flutter plugin for Firebase Analytics (which uses Google Analytics behind the scenes) works with 4 platforms (Android, iOS, macOS, and Web). For Windows and Linux, there's no out-of-the-box support.
+The official Flutter plugin for Firebase Analytics (which uses Google Analytics behind the scenes) works with 4 platforms (Android, iOS, macOS, and Web). For Windows and Linux, there's no out-of-the-box support.
 
 *Ambilytics* Flutter plugin solves this issue by enabling Google Analytics 4 (GA4) Measurement Protocol for unsupported platforms (Windows and Linux) and creating a unified interface that abstracts away interaction with 2 different analytics backends:
 - Google/Firebase Analytics
@@ -9,7 +9,7 @@ Currently official Flutter plugin for Firebase Analytics (which uses Google Anal
 - GA4 Measurement Protocol
     - You create a separate Web stream to track events sent from Windows/Linux
 
-By creating Firebase project, configuring Google Analytics property, importing the package, and setting navigation observer, you get the capability to send standard and app events to Google Analytics and see them in Reports.
+By creating Firebase project, configuring Google Analytics property, importing the package, and setting navigation observer, you get the capability to send standard and custom events to Google Analytics and see data in Reports.
 
 # Features
 
@@ -27,16 +27,23 @@ Check `/example` folder for usage detail.
 
 # Challenges
 
-Measurement Protocol can't be a complete replacement for the default Google Analytics backed:
+Measurement Protocol can't be a complete replacement for the default Google Analytics backend:
 - Limited standard reports in GA4 for unsupported platforms
     - You might need to create custom dimensions and customize standard reports
 - Measurement protocol doesn't support sending standard events, e.g. instead if `screen_view` events sent via Firebase, a custom event `screen_view_cust` is sent (with screen name param). 
     - This make standard Events report not useful for all 6 platforms. Yet the package allowed sending both events, which make it possible to create a custom report that can track screen views across all platforms.
 - No automatic geo, demographic, and language data collection for Measurement Protocol
 
-# Configuring Analytics
+# Configuring Ambilytics
 
-Historically Firebase Analytics was used for app analytics and Google Analytics for web. Now they are integrated and used together. In order to proceed you'll need a Google Account. Using this account you will set-up a project in Firebase Console which will be linked to an account/property in Google Analytics. All reports will be available in Google Analytics Console.
+Historically Firebase Analytics was used for app analytics on iOS/Android and Google Analytics for web. Now they are integrated. In order to proceed you'll need a Google Account. Using this account you will set-up a project in Firebase Console which will be linked to an account/property in Google Analytics. All reports will be available in Google Analytics Console.
+
+The workflow has 2 steps:
+1. Configuring Firebase Analytics for complete reporting on any of the 4 platforms (Android, iOS, macOS, Web)
+2. Configuring Measurement Protocol for essential analytics on Windows and Linux
+
+
+# Configuring Firebase
 
 Bellow you can find instructions for 2 scenarios:
 1. Adding analytics from scratch

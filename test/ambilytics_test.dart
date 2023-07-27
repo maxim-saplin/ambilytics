@@ -82,7 +82,7 @@ void main() {
         fallbackToMP: true);
     expect(isAmbilyticsInitialized, true);
     clearInteractions(mock);
-    sendEvent('custom_event', {'custom_param': 'val1'});
+    sendEvent(name: 'custom_event', parameters: {'custom_param': 'val1'});
     final captured =
         verify(() => mock.sendEvent(captureAny(), captureAny())).captured;
     expect(captured[0], 'custom_event');
@@ -99,7 +99,7 @@ void main() {
     expect(isAmbilyticsInitialized, true);
     expect(isAmbilyticsDisabled, true);
     clearInteractions(mock);
-    sendEvent('custom_event', {'custom_param': 'val1'});
+    sendEvent(name: 'custom_event', parameters: {'custom_param': 'val1'});
     final captured =
         verifyNever(() => mock.sendEvent(captureAny(), captureAny())).captured;
     expect(captured.length, 0);
@@ -117,7 +117,7 @@ void main() {
     isAmbilyticsDisabled = true;
     clearInteractions(mock);
 
-    sendEvent('custom_event', {'custom_param': 'val1'});
+    sendEvent(name: 'custom_event', parameters: {'custom_param': 'val1'});
     var captured =
         verifyNever(() => mock.sendEvent(captureAny(), captureAny())).captured;
     expect(captured.length, 0);
@@ -125,7 +125,7 @@ void main() {
     isAmbilyticsDisabled = false;
     clearInteractions(mock);
 
-    sendEvent('custom_event', {'custom_param': 'val1'});
+    sendEvent(name: 'custom_event', parameters: {'custom_param': 'val1'});
     captured =
         verify(() => mock.sendEvent(captureAny(), captureAny())).captured;
     expect(captured[0], 'custom_event');
@@ -164,7 +164,7 @@ void main() {
     await initAnalytics(fallbackToMP: true);
     expect(isAmbilyticsInitialized, true);
     clearInteractions(mock);
-    sendEvent('custom_event', {'custom_param': 'val1'});
+    sendEvent(name: 'custom_event', parameters: {'custom_param': 'val1'});
     final captured = verify(() => mock.logEvent(
         name: captureAny(named: 'name'),
         parameters: captureAny(named: 'parameters'),
@@ -183,7 +183,7 @@ void main() {
     await initAnalytics(fallbackToMP: true);
     expect(isAmbilyticsInitialized, true);
     clearInteractions(mock);
-    sendEvent('custom_event', {'custom_param': 'val1'});
+    sendEvent(name: 'custom_event', parameters: {'custom_param': 'val1'});
     final captured = verify(() => mock.logEvent(
         name: captureAny(named: 'name'),
         parameters: captureAny(named: 'parameters'),

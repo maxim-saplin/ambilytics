@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _incrementCounter() {
     setState(() {
       _counter++;
-      ambylitics.sendEvent(counterClicked, null);
+      ambylitics.sendEvent(name: counterClicked);
       // TODO, test in release mode what happens is predefined name is sent via Firebase
       //sendEvent('ad_click', null);
 

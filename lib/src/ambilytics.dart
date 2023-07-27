@@ -135,23 +135,23 @@ Future<void> initAnalytics(
 
 void _sendAppLaunchEvent() {
   final params = {'platform': defaultTargetPlatform.name};
-  sendEvent(PredefinedEvents.appLaunch, params);
+  sendEvent(name: PredefinedEvents.appLaunch, parameters: params);
 }
 
 /// Sends a given [eventName] with given [params] using either [firebaseAnalitics]
 /// or Measurement Protocol [ambilytics]. It tries Firbase Analytics first (if it is initilized)
 /// then it goes to MP. It doesn't send events with both protocols, just one
-void sendEvent(String eventName, [Map<String, Object?>? params]) {
+void sendEvent({required String name, Map<String, Object?>? parameters}) {
   if (!_initialized) return;
   if (_disabled) return;
 
-  assert(!reservedGa4Events.contains(eventName));
-  assert(eventName.isNotEmpty && eventName.length <= 40,
+  assert(!reservedGa4Events.contains(name));
+  assert(name.isNotEmpty && name.length <= 40,
       'Event name should be between 1 and 40 characters long');
   if (_firebaseAnalytics != null) {
-    _firebaseAnalytics!.logEvent(name: eventName, parameters: params);
+    _firebaseAnalytics!.logEvent(name: name, parameters: parameters);
   } else if (_ambilytics != null) {
-    _ambilytics!.sendEvent(eventName, params);
+    _ambilytics!.sendEvent(name, parameters);
   }
 }
 
