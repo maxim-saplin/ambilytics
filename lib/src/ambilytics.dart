@@ -155,15 +155,6 @@ void sendEvent({required String name, Map<String, Object?>? parameters}) {
   }
 }
 
-// TODO, add docs on propper setup of native projects
-// e.g. If you develop for Android, permission inside the manifest tag in the AndroidManifest.xml must be added
-
-//macOS
-// macOS needs you to request a specific entitlement in order to access the network. To do that open macos/Runner/DebugProfile.entitlements and add the following key-value pair.
-// <key>com.apple.security.network.client</key>
-// <true/>
-// Then do the same thing in macos/Runner/Release.entitlements.
-
 /// Filter out non PageRoute ones
 bool defaultRouteFilter(Route<dynamic>? route) => route is PageRoute;
 
@@ -283,8 +274,8 @@ class AmbilyticsSession {
   /// [eventName] is the name of the event. Max length is 40 characters.
   /// [params] is a Map of additional parameters to attach to the event.
   void sendEvent(String eventName, Map<String, Object?>? params) {
-    // TODO, check what happens in prod if requirements are not met
     assert(!reservedGa4Events.contains(eventName));
+    if (reservedGa4Events.contains(eventName)) return;
     assert(eventName.length <= 40);
     assert(
         eventName.isNotEmpty &&
@@ -307,10 +298,6 @@ class AmbilyticsSession {
         {'name': eventName, 'params': defParams}
       ]
     });
-
-    // TODO, resolve CORS issues
-    // for the timebeing Web client is started with browser having CORS disabled via terminal command:
-    // flutter run -d chrome --web-browser-flag "--disable-web-security"
 
     var headers = {
       'Content-Type': 'application/json',

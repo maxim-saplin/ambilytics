@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:ambilytics/ambilytics.dart' as ambylitics;
+import 'package:ambilytics/ambilytics.dart' as ambilytics;
 import 'package:ambilytics_example/preferences.dart';
 import 'package:flutter/material.dart';
 
@@ -23,10 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _incrementCounter() {
     setState(() {
       _counter++;
-      ambylitics.sendEvent(name: counterClicked);
-      // TODO, test in release mode what happens is predefined name is sent via Firebase
-      //sendEvent('ad_click', null);
-
+      ambilytics.sendEvent(name: counterClicked);
       debugPrint('$counterClicked sent');
     });
   }
