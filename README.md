@@ -19,7 +19,7 @@ Product analytics made easy (and ambient).
 - Seamless interaction with Firebase Analytics and GA4 Measurement Protocol
 - Automatic app start and screen view event tracking
     - `app_start` custom event is sent during initialization, `platform` parameter contains name of the platform
-    - When `AmbylyticsObserver` is configured `screen_view` is sent on Firebase platforms along with `screen_view_cust` via Measurement Protocol (either for all platforms or only Windows/Linux, configurable)
+    - When `AmbilyticsObserver` is configured `screen_view` is sent on Firebase platforms along with `screen_view_cust` via Measurement Protocol (either for all platforms or only Windows/Linux, configurable)
 - Custom event tracking
 - Configurable navigation observer for easy integration
   - It can register `showDialog()` actions as navigation events
@@ -86,7 +86,7 @@ flutterfire configure
 4. Use the generated `firebase_options.dart` to initialize `Ambilytics` (see below) 
 5. Open Firebase Console (https://console.firebase.google.com/) and choose used above project. Click `Analytics->Dashboard` tab to the left, click `Enable Google Analytics` button. You will be presented with a wizard that will link Google Analytics account to Firebase project. At the last step `Add the Google Analytics SDK` just click `Finish` button as `flutterfire configure` command above has already taken care of that.
 
-At this point you have Firebase/Google Analytics setup for up-to 4 platforms (Android, iOS, macOS and web). Next you need to [Configure Measurement Protocol](#measurement-protocol) to cover Windows and Linux and [Start using Ambylitics in your app](#using-ambilytics-in-your-app) and start sending events.
+At this point you have Firebase/Google Analytics setup for up-to 4 platforms (Android, iOS, macOS and web). Next you need to [Configure Measurement Protocol](#measurement-protocol) to cover Windows and Linux and [Start using Ambilytics in your app](#using-ambilytics-in-your-app) and start sending events.
 
 **Notes:**
 - Running the command will show the list of existing Firebase projects to choose one OR will suggest to create a new project.
@@ -135,9 +135,9 @@ Learn more about using this file and next steps from the documentation:
 
 ## b) Adding to Flutter app already using Firebase Analytics
 
-Given you have been using Firebase Analytics plugin, native platforms are already set (the above a) step is not necessary), you are using `FirebaseAnalytics.logEvent()` to send events and `FirebaseAnalyticsObserver` to plug-in to navigation events. In this case in order to switch to `Ambylytics` you have to:
+Given you have been using Firebase Analytics plugin, native platforms are already set (the above a) step is not necessary), you are using `FirebaseAnalytics.logEvent()` to send events and `FirebaseAnalyticsObserver` to plug-in to navigation events. In this case in order to switch to `Ambilytics` you have to:
 1. [Enable Measurement Protocol](#measurement-protocol) as described below
-2. Replace all occurrences of `FirebaseAnalytics.logEvent()` with `sendEvent()` from this package and replace `FirebaseAnalyticsObserver` with `AmbyliticsObserver`. [See using Ambylitics in your app](#using-ambilytics-in-your-app) 
+2. Replace all occurrences of `FirebaseAnalytics.logEvent()` with `sendEvent()` from this package and replace `FirebaseAnalyticsObserver` with `AmbilyticsObserver`. [See using Ambilytics in your app](#using-ambilytics-in-your-app) 
 
 # Measurement Protocol
 
@@ -167,7 +167,7 @@ dependencies:
   ambilytics:
     path: ../
 ```
-2. Import Ambylitics:
+2. Import Ambilytics:
 ```dart
 import 'package:ambilytics/ambilytics.dart' as ambilytics;
 ```
@@ -198,9 +198,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // Here
-      navigatorObservers: ambilytics.isAmbyliticsInitialized
+      navigatorObservers: ambilytics.isAmbilyticsInitialized
           ? [
-              ambilytics.AmbyliticsObserver(
+              ambilytics.AmbilyticsObserver(
                   routeFilter: ambilytics.anyRouteFilter,
                   alwaySendScreenViewCust: true)
             ]
@@ -223,7 +223,7 @@ class MyApp extends StatelessWidget {
     setState(() {
       _counter++;
       // Here
-      ambylitics.sendEvent(counterClicked, null);
+      ambilytics.sendEvent(counterClicked, null);
     });
   }
 ```
