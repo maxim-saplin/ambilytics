@@ -275,7 +275,7 @@ After that you should be able to see custom events and their params in reports, 
 # Known issues/Troubleshooting
 
 ## 1. Can't build macOS/iOS project with 'Error run pod install' or alike
-In terminal go t macOS or iOS folder, remove `Podfile.lock` and run `pod repo update`
+In terminal go to macOS or iOS folder, remove `Podfile.lock` and run `pod repo update`
 
 ## 2. Android build fails (:app:mapReleaseSourceSetPaths)
 If you get error 
@@ -304,5 +304,5 @@ All reports outside `Realtime` can take up to a day to be in sync
 ## 5. No data in Realtime reports (on Android, iOS)
 For mobile platforms (Android, iOS) Firebase Analytics uploads/processes data in batches, i.e. it takes some time to collect and than send and display it (presumably for battery saving). As a result you get jagged events (i.e. some come right away, some take time).
 
-## 5. No data reports from macOS
+## 5. No data in reports from macOS clients
 Check the above manual for *Fix macOS* and update `DebugProfile.entitlements` and `Release.entitlements`
