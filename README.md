@@ -83,7 +83,25 @@ flutterfire configure
 </dict>
 </plist>
 ```
-4. Use the generated `firebase_options.dart` to initialize `Ambilytics` (see below) 
+4. Modify and use the generated `firebase_options.dart` to initialize `Ambilytics` ([see here](#using-ambilytics-in-your-app))
+  - You need to remove unnecessary platforms from the generated file to avoid error:
+  ```dart
+    static FirebaseOptions get currentPlatform {
+    if (kIsWeb) {
+      return web;
+    }
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+        return android;
+      case TargetPlatform.iOS:
+        return ios;
+      case TargetPlatform.macOS:
+        return macos;
+      default:
+        return macos;
+    }
+  }
+  ```
 5. Open Firebase Console (https://console.firebase.google.com/) and choose used above project. Click `Analytics->Dashboard` tab to the left, click `Enable Google Analytics` button. You will be presented with a wizard that will link Google Analytics account to Firebase project. At the last step `Add the Google Analytics SDK` just click `Finish` button as `flutterfire configure` command above has already taken care of that.
 
 At this point you have Firebase/Google Analytics setup for up-to 4 platforms (Android, iOS, macOS and web). Next you need to [Configure Measurement Protocol](#measurement-protocol) to cover Windows and Linux and [Start using Ambilytics in your app](#using-ambilytics-in-your-app) and start sending events.
