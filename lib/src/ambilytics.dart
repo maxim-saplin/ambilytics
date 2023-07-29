@@ -134,7 +134,7 @@ Future<void> initAnalytics(
 }
 
 void _sendAppLaunchEvent() {
-  final params = {'platform': defaultTargetPlatform.name};
+  final params = {'platform': kIsWeb ? 'web' : defaultTargetPlatform.name};
   sendEvent(name: PredefinedEvents.appLaunch, parameters: params);
 }
 

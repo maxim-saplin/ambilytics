@@ -8,7 +8,6 @@ import 'home_screen.dart';
 
 void main() async {
   // Inits either Firebase Analytics (macOS, iOS, Android, Web) or GA4 Measurement Protocol, sends out app_launch event with current platform as param
-
   var disable = !(await getShareAnalyticsPreference());
 
   await ambilytics.initAnalytics(

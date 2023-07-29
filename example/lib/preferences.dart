@@ -54,6 +54,7 @@ Future<void> saveShareAnalyticsPreference(bool value) async {
 }
 
 Future<bool> getShareAnalyticsPreference() async {
+  WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return prefs.getBool(_key) ?? true;
 }
