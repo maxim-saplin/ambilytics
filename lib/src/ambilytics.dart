@@ -49,6 +49,9 @@ void resetInitialized() {
   _firebaseAnalytics = null;
 }
 
+// TODO: consider adding a flag to send platform as param with all events (that would be needed to show platfrom as dimenion)
+// Challenge is tha it can be done for all custom events, not sure about standard (e.g. screen_view)
+
 /// Prepares analytics for usage. Doesn't throw errors, in debug mode throws assertions. If Ambilytics fails to initialize [isAmbilyticsInitialized] returns false.
 /// If the platform is Android, iOS, macOS, or Web, Firebase Analytics will be used ([_firebaseAnalytics] instance will be initialized).
 /// Otherwise, GA4 Measurement protocol and custom events will be used ([_ambilytics] instance will be initialized).
