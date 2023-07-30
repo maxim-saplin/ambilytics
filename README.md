@@ -306,3 +306,7 @@ For mobile platforms (Android, iOS) Firebase Analytics uploads/processes data in
 
 ## 5. No data in reports from macOS clients
 Check the above manual for *Fix macOS* and update `DebugProfile.entitlements` and `Release.entitlements`
+
+## 6. `A Firebase App named "[DEFAULT]" already exists` error
+Likely reason for that is that you already used FirebaseAnalytics with configured native projects and started using FirebaseOptions.
+You can try deleting `android/app/src/google-services.json`, `ios/Runner/GoogleService-Info.plist` and `macos/Runner/GoogleService-Info.plist` files and rerun `flutterfire configure`
