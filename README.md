@@ -15,8 +15,6 @@ Product analytics made easy (and ambient).
 
 <img width="400" alt="image" src="https://github.com/maxim-saplin/ambilytics/blob/main/_misc/GA.png?raw=true">
 
-
-
 # Features
 
 - Unified analytics interface for all Flutter platforms

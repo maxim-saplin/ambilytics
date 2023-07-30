@@ -1,6 +1,6 @@
 name: ambilytics
 description: Google Analytics for all Flutter platfroms (Android, iOS, macOS, Web, Windows and Linux)
-version: 1.0.2
+version: 1.0.3
 repository: https://github.com/maxim-saplin/ambilytics
 homepage: https://github.com/maxim-saplin/ambilytics
 

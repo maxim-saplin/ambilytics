@@ -10,3 +10,4 @@ build/
 example/lib/config.prod.dart
 private.MD
 .flutter-plugins-dependencies
+.flutter-plugins

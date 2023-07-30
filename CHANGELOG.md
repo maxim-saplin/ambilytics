@@ -1,3 +1,6 @@
+## 1.0.3
+- Readme updates
+
 ## 1.0.2
 - Correct platforms sent with app_launch in Web
 - Fixed example on iOS
