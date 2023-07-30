@@ -38,6 +38,8 @@ Measurement Protocol can't be a complete replacement for the default Google Anal
     - This make standard Events report not useful for all 6 platforms. Yet the package allowed sending both events, which make it possible to create a custom report that can track screen views across all platforms.
 - No automatic geo, demographic, and language data collection for Measurement Protocol
 
+Hence the philosophy of this package: complete analytics for the platfroms supported by Firebase and essential events from unsupported platfroms (Windows and Linux).
+
 # Configuring Ambilytics
 
 Historically Firebase Analytics was used for app analytics on iOS/Android and Google Analytics for web. Now they are integrated. In order to proceed you'll need a Google Account. Using this account you will set-up a project in Firebase Console which will be linked to an account/property in Google Analytics. All reports will be available in Google Analytics Console.
