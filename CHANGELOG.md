@@ -1,3 +1,6 @@
+## 1.0.4
+- Bumped dependency versions
+
 ## 1.0.3
 - Readme updates
 
