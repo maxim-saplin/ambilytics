@@ -106,6 +106,23 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
+  test('AmbilyticsSession has correct user ID', () async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+
+    const testMeasurementId = 'testMeasurementId';
+    const testApiSecret = 'testApiSecret';
+    const testUserId = 'testUserId';
+
+    await initAnalytics(
+        measurementId: testMeasurementId,
+        apiSecret: testApiSecret,
+        userId: testUserId);
+
+    expect(ambilytics!.userId, testUserId);
+
+    debugDefaultTargetPlatformOverride = null;
+  });
+
   test('Ambilytics can be disabled and re-enabled', () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.windows;
     var mock = MockAmbilyticsSession();

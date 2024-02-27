@@ -1,4 +1,9 @@
 ## 1.0.4
+- Measurement Protocol, fixed user id (issue #2)
+- Bumped dependency versions
+- Cleaned up /example
+
+## 1.0.4
 - Bumped dependency versions
 
 ## 1.0.3
