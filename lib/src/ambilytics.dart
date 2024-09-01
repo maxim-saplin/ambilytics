@@ -151,7 +151,7 @@ void _sendAppLaunchEvent() {
 /// Sends a given [eventName] with given [params] using either [firebaseAnalitics]
 /// or Measurement Protocol [ambilytics]. It tries Firbase Analytics first (if it is initilized)
 /// then it goes to MP. It doesn't send events with both protocols, just one
-void sendEvent({required String name, Map<String, Object?>? parameters}) {
+void sendEvent({required String name, Map<String, Object>? parameters}) {
   if (!_initialized) return;
   if (_disabled) return;
 
