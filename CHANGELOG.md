@@ -1,4 +1,4 @@
-## 1.0.4
+## 1.0.7
 - Bumped up firebase_analytics versions to ^11.3.1
 
 ## 1.0.5
