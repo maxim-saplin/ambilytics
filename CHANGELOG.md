@@ -1,3 +1,6 @@
+## 1.0.4
+- Bumped up firebase_analytics versions to ^11.3.1
+
 ## 1.0.5
 - Measurement Protocol, fixed user id (issue #2)
 - Bumped dependency versions
