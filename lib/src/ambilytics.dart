@@ -12,7 +12,7 @@ AmbilyticsSession? _ambilytics;
 FirebaseAnalytics? _firebaseAnalytics;
 Object? _initError;
 
-// Analytics can be initilize but disabled in case disabling occures after initialization
+// Analytics can be initialize but disabled in case disabling occurs after initialization
 bool _initialized = false;
 bool _disabled = true;
 
@@ -22,10 +22,10 @@ AmbilyticsSession? get ambilytics => _ambilytics;
 /// Firebase Analytics backend
 FirebaseAnalytics? get firebaseAnalytics => _firebaseAnalytics;
 
-/// Whether analytics initialization was succesfully completed
+/// Whether analytics initialization was successfully completed
 bool get isAmbilyticsInitialized => _initialized;
 
-/// If error occured during initialization error is not thrown yet detail is saved in this property
+/// If error occurred during initialization error is not thrown yet detail is saved in this property
 Object? get initError => _initError;
 
 /// Stop or resume sending events
@@ -49,7 +49,7 @@ void resetInitialized() {
   _firebaseAnalytics = null;
 }
 
-// TODO: consider adding a flag to send platform as param with all events (that would be needed to show platfrom as dimenion)
+// TODO: consider adding a flag to send platform as param with all events (that would be needed to show platfrom as dimension)
 // Challenge is tha it can be done for all custom events, not sure about standard (e.g. screen_view)
 
 /// Prepares analytics for usage. Doesn't throw errors, in debug mode throws assertions. If Ambilytics fails to initialize [isAmbilyticsInitialized] returns false.
@@ -59,10 +59,10 @@ void resetInitialized() {
 ///
 /// If [fallbackToMP] is true, than Measurement Protocol will be used if Firebase analytics fails to initialize. E.g. you can skip configuring Firebase Analytics in native projects and use MP for all platforms.
 ///
-/// If [disableAnalytics] is `true`, analytics will not be initialized, any analytics calls will be ingonred,
-/// [_firebaseAnalytics] and [_ambilytics] instances will be null. Usefull for the scanarious when toy wish to disable analytics.
+/// If [disableAnalytics] is `true`, analytics will not be initialized, any analytics calls will be ignored,
+/// [_firebaseAnalytics] and [_ambilytics] instances will be null. Useful for the scenarios when toy wish to disable analytics.
 ///
-/// If [sendAppLaunch] is true, "app_launch" will be sent with "platfrom" param value corresponding runtime platform (i.e. Windows)
+/// If [sendAppLaunch] is true, "app_launch" will be sent with "platform" param value corresponding runtime platform (i.e. Windows)
 ///
 /// [firebaseOptions] forwards options (e.g. generated via `flutterfire configure`) to `Firebase.initializeApp()`.
 ///
@@ -139,7 +139,7 @@ Future<void> initAnalytics(
   } catch (e) {
     _initialized = false;
     _initError = e;
-    assert(false, 'Can\'t init anaytics due to error.\n\n$e');
+    assert(false, 'Can\'t init analytics due to error.\n\n$e');
   }
 }
 
@@ -148,8 +148,8 @@ void _sendAppLaunchEvent() {
   sendEvent(name: PredefinedEvents.appLaunch, parameters: params);
 }
 
-/// Sends a given [eventName] with given [params] using either [firebaseAnalitics]
-/// or Measurement Protocol [ambilytics]. It tries Firbase Analytics first (if it is initilized)
+/// Sends a given [eventName] with given [params] using either [firebaseAnalytics]
+/// or Measurement Protocol [ambilytics]. It tries Firebase Analytics first (if it is initialized)
 /// then it goes to MP. It doesn't send events with both protocols, just one
 void sendEvent({required String name, Map<String, Object>? parameters}) {
   if (!_initialized) return;
@@ -173,7 +173,7 @@ bool anyRouteFilter(Route<dynamic>? route) => true;
 String? defaultNameExtractor(RouteSettings settings) => settings.name;
 
 /// Alternative to [FirebaseAnalyticsObserver] which intercepts
-/// Flutter nivigation events and send screen view events.
+/// Flutter navigation events and send screen view events.
 /// The difference is that for unsupported platforms (e.g. Linux, Window)
 /// of if FirebaseAnalytics is not configured
 /// the app uses Measurement Protocol and sends custom 'screen_view_cust'
@@ -264,12 +264,12 @@ class AmbilyticsObserver extends RouteObserver<ModalRoute<dynamic>> {
 }
 
 class AmbilyticsSession {
-  AmbilyticsSession(this.measutementId, this.apiSecret, this.userId,
+  AmbilyticsSession(this.measurementId, this.apiSecret, this.userId,
       [this.useValidationServer = false]) {
     _sessionId = sessionStarted.toIso8601String();
   }
 
-  final String measutementId;
+  final String measurementId;
   final String apiSecret;
   final String userId;
 
@@ -318,7 +318,7 @@ class AmbilyticsSession {
 
     http.post(
       Uri.parse(
-          'https://www.google-analytics.com/${useValidationServer ? 'debug/' : ''}mp/collect?measurement_id=$measutementId&api_secret=$apiSecret'),
+          'https://www.google-analytics.com/${useValidationServer ? 'debug/' : ''}mp/collect?measurement_id=$measurementId&api_secret=$apiSecret'),
       headers: headers,
       body: body,
     );
