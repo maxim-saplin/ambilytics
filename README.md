@@ -314,3 +314,17 @@ Check the above manual for *Fix macOS* and update `DebugProfile.entitlements` an
 ## 6. `A Firebase App named "[DEFAULT]" already exists` error
 Likely reason for that is that you already used FirebaseAnalytics with configured native projects and started using FirebaseOptions.
 You can try deleting `android/app/src/google-services.json`, `ios/Runner/GoogleService-Info.plist` and `macos/Runner/GoogleService-Info.plist` files and rerun `flutterfire configure`
+
+## 7. Error initialising Firebase on a Linux or Windows environment
+You may see this error: `Unhandled Exception: Unsupported operation: DefaultFirebaseOptions are not supported for this platform.`
+
+This occurs when you build with the `firebaseOptions` in the config when building to Linux or Windows. You could conditionally add this config option if you do need to build to different environments if required.
+
+However, Firebase config is not necessary, so perhaps if you want to use the Measurement Protocol exclusively or you are only building to a Linux and Windows environment, you can leave out the `firebaseOptions` config entirely...
+
+```dart
+ambilytics.initAnalytics(
+    measurementId: 'G-6R363DDKTZ',
+    apiSecret: 'uzUv6h_iRS6hEt_sIVtTTA',
+);
+```
