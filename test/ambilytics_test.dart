@@ -14,10 +14,10 @@ void main() {
   // Make instance fresh in order to avoid side effects and failing tests
   tearDown(() => resetInitialized());
 
-  test('Ambilytics with empty params doesn\'t get initilized', () async {
+  test('Ambilytics with empty params doesn\'t get initialized', () async {
     // !In debug mode test fails due to frozen FB Analytics init (until you set 'Debug My Code + Packages' in VSCode)
 
-    // // in fact this assertion doesn't hold cause there's endless wait inside when firebase starts inint and test just preoceeds due t no actual await
+    // // in fact this assertion doesn't hold cause there's endless wait inside when firebase starts init and test just proceeds due to no actual await
     //expect(() async => await initAnalytics(), throwsAssertionError);
     var flag = false;
     try {
@@ -32,21 +32,21 @@ void main() {
     expect(initError, isNotNull);
   });
 
-  test('Ambilytics with GA4 MP params gets initilized', () async {
-    // Seems like Flutter test SDK slways sets platform to Android
+  test('Ambilytics with GA4 MP params gets initialized', () async {
+    // Seems like Flutter test SDK always sets platform to Android
     debugDefaultTargetPlatformOverride = TargetPlatform.windows;
     await initAnalytics(measurementId: 'someId', apiSecret: 'someSecret');
     expect(ambilytics, isNotNull);
     expect(ambilytics!.userId.isEmpty, false);
-    expect(ambilytics!.measutementId.isEmpty, false);
+    expect(ambilytics!.measurementId.isEmpty, false);
     expect(ambilytics!.apiSecret.isEmpty, false);
     expect(firebaseAnalytics, null);
     expect(isAmbilyticsInitialized, true);
     debugDefaultTargetPlatformOverride = null;
   });
 
-  test('Ambilytics falls back to GA4 MP params when initilized', () async {
-    // Seems like Flutter test SDK slways sets platform to Android
+  test('Ambilytics falls back to GA4 MP params when initialized', () async {
+    // Seems like Flutter test SDK always sets platform to Android
     await initAnalytics(
         measurementId: 'someId', apiSecret: 'someSecret', fallbackToMP: true);
     expect(ambilytics, isNotNull);
@@ -54,12 +54,12 @@ void main() {
     expect(isAmbilyticsInitialized, true);
   });
 
-  test('Ambilytics sends app_launch event with correct platfrom', () async {
+  test('Ambilytics sends app_launch event with correct platform', () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.linux;
     expect(isAmbilyticsInitialized, false);
     var mock = MockAmbilyticsSession();
     setMockAmbilytics(mock);
-    // Hiding MP paramas to use mocked instance instead
+    // Hiding MP params to use mocked instance instead
     await initAnalytics(
         //measurementId: 'someId', apiSecret: 'someSecret',
         fallbackToMP: true);
@@ -76,7 +76,7 @@ void main() {
     debugDefaultTargetPlatformOverride = TargetPlatform.windows;
     var mock = MockAmbilyticsSession();
     setMockAmbilytics(mock);
-    // Hiding MP paramas to use mocked instance instead
+    // Hiding MP params to use mocked instance instead
     await initAnalytics(
         //measurementId: 'someId', apiSecret: 'someSecret',
         fallbackToMP: true);
@@ -94,7 +94,7 @@ void main() {
     debugDefaultTargetPlatformOverride = TargetPlatform.windows;
     var mock = MockAmbilyticsSession();
     setMockAmbilytics(mock);
-    // Hiding MP paramas to use mocked instance instead
+    // Hiding MP params to use mocked instance instead
     await initAnalytics(disableAnalytics: true);
     expect(isAmbilyticsInitialized, true);
     expect(isAmbilyticsDisabled, true);
@@ -127,7 +127,7 @@ void main() {
     debugDefaultTargetPlatformOverride = TargetPlatform.windows;
     var mock = MockAmbilyticsSession();
     setMockAmbilytics(mock);
-    // Hiding MP paramas to use mocked instance instead
+    // Hiding MP params to use mocked instance instead
     await initAnalytics();
     expect(isAmbilyticsDisabled, false);
 
@@ -151,7 +151,7 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
-  test('Firebase analytics sends app_launch event with correct platfrom',
+  test('Firebase analytics sends app_launch event with correct platform',
       () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
     var mock = MockFirebaseAnalytics();

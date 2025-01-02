@@ -38,7 +38,7 @@ Measurement Protocol can't be a complete replacement for the default Google Anal
     - This make standard Events report not useful for all 6 platforms. Yet the package allowed sending both events, which make it possible to create a custom report that can track screen views across all platforms.
 - No automatic geo, demographic, and language data collection for Measurement Protocol
 
-Hence the philosophy of this package: complete analytics for the platfroms supported by Firebase and essential events from unsupported platfroms (Windows and Linux).
+Hence the philosophy of this package: complete analytics for the platforms supported by Firebase and essential events from unsupported platforms (Windows and Linux).
 
 # Configuring Ambilytics
 
@@ -66,7 +66,7 @@ The below instructions are based on this manual: https://firebase.google.com/doc
 ```bash
 firebase login
 ```
-- you can logout via `logut` command and than repeat the `login` command to change the account
+- you can logout via `logout` command and than repeat the `login` command to change the account
 3. Install the FlutterFire CLI by running the following command from any directory:
 ```bash
 dart pub global activate flutterfire_cli
@@ -168,7 +168,7 @@ To enable essential data sent from `Windows` and `Linux` you will have to create
 1. Go to Google Analytics Console (https://analytics.google.com/analytics/web/) 
 2. At the top left corner check that you're using the right property
   - Given that you have already setup Firebase platforms (as described above) make sure to choose the configure property in order to have data in one place for all platforms
-3. Click Admin (gear icon at the bottom left) -> Data Stream -> `Add wtream` button -> `Web`
+3. Click Admin (gear icon at the bottom left) -> Data Stream -> `Add stream` button -> `Web`
   - Enter any URL and choose stream name (e.g. 'Windows-Linux')
   - Skip installation instructions
   - Copy `Measurement ID`
@@ -314,3 +314,17 @@ Check the above manual for *Fix macOS* and update `DebugProfile.entitlements` an
 ## 6. `A Firebase App named "[DEFAULT]" already exists` error
 Likely reason for that is that you already used FirebaseAnalytics with configured native projects and started using FirebaseOptions.
 You can try deleting `android/app/src/google-services.json`, `ios/Runner/GoogleService-Info.plist` and `macos/Runner/GoogleService-Info.plist` files and rerun `flutterfire configure`
+
+## 7. Error initialising Firebase on a Linux or Windows environment
+You may see this error: `Unhandled Exception: Unsupported operation: DefaultFirebaseOptions are not supported for this platform.`
+
+This occurs when you build with the `firebaseOptions` in the config when building to Linux or Windows. You could conditionally add this config option if you do need to build to different environments if required.
+
+However, Firebase config is not necessary, so perhaps if you want to use the Measurement Protocol exclusively or you are only building to a Linux and Windows environment, you can leave out the `firebaseOptions` config entirely...
+
+```dart
+ambilytics.initAnalytics(
+    measurementId: 'G-6R363DDKTZ',
+    apiSecret: 'uzUv6h_iRS6hEt_sIVtTTA',
+);
+```
