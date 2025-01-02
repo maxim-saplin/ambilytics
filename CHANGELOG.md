@@ -1,3 +1,7 @@
+## 1.0.8
+- Readme updates
+- Some small spelling fixes
+
 ## 1.0.7
 - Bumped up firebase_analytics versions to ^11.3.1
 
@@ -21,5 +25,4 @@
 - Supported platforms updated
 
 ## 1.0.0
-
 - Initial version.
