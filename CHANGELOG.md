@@ -1,6 +1,7 @@
-## 1.0.8
+## 1.1.0
 - Readme updates
-- Some small spelling fixes
+- Spelling fixes
+- Public API update (AmbilyticsSession.measurementId spelling fixed)
 
 ## 1.0.7
 - Bumped up firebase_analytics versions to ^11.3.1
