@@ -1,3 +1,6 @@
+## 1.2.0
+- Dependencies version bump
+
 ## 1.1.0
 - Readme updates
 - Spelling fixes

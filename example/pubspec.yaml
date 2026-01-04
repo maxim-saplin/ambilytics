@@ -1,21 +1,20 @@
 name: ambilytics_example
 description: Ambilytics example
-ublish_to: 'none' 
+ublish_to: "none"
 version: 1.0.0+1
 publish_to: none
 
 environment:
-  sdk: '>=3.0.5 <4.0.0'
+  sdk: ">=3.0.5 <4.0.0"
 
 dependencies:
   flutter:
-    sdk: flutter  
+    sdk: flutter
   cupertino_icons: ^1.0.2
-  firebase_core: ^3.4.1
+  firebase_core:
   shared_preferences: ^2.2.0
   ambilytics:
     path: ../
-
 
 dev_dependencies:
   flutter_test:
